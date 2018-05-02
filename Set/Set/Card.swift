@@ -40,7 +40,6 @@ struct Card: Equatable, CustomStringConvertible {
             cards.reduce(0, { $0 + $1.shape.rawValue })
         ]
         return (sum.reduce(true, { $0 && ($1 % 3  == 0) } ))
-    
     }
     
 }

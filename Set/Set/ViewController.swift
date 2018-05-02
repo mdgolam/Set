@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     @IBOutlet private var cardButtons: [UIButton]!
     @IBOutlet weak var scoreLabel: UILabel!
     
-    
     @IBAction func touchCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.index(of: sender) {
             game.chooseCard(at: cardNumber)
@@ -23,27 +22,32 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func dealThreeMoreCards(_ sender: UIButton) {
+        if game.cards.count < 22 || game.selectedCards.count == 3 {
+            game.deal()
+            updateButtonsFromModel()
+        }
+    }
+    @IBAction func restartGame(_ sender: UIButton) {
+        updateButtonsFromModel()
+    }
+    
+    let figures = ["▲●■"]
+    
     private func updateButtonsFromModel() {
-        for index in cardButtons.indices {
+        for index in game.cards.indices {
             let button = cardButtons[index]
-//            let card = game.cards[index]
-            button.setTitle( String (index), for: .normal)
-            if index < 12 {
-                button.backgroundColor = #colorLiteral(red: 0.5725490451, green: 0, blue: 0.2313725501, alpha: 1)
-            }
-//            if game.cards.contains(card) {
-////                draw card
-////                attribute depends on the selectedCards.contains
-//            } else {
-////                zero string
-//            }
+            let card = game.cards[index]
+            let attributes: [NSAttributedStringKey : Any] = [
+                .strokeColor : game.selectedCards.contains(card) ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+                ]
+            
+            let title = String(repeating: figures[card.shape.rawValue], count: card.number.rawValue)
+            let attributedTitle = NSAttributedString(string: title, attributes: attributes)
+            button.setAttributedTitle(attributedTitle, for: .normal)
         }
     }
     
-    @IBAction func dealThreeMoreCards(_ sender: UIButton) {
-    }
-    @IBAction func restartGame(_ sender: UIButton) {
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
