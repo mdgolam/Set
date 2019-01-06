@@ -13,11 +13,11 @@ struct CardDeck {
     private(set) var cards = [Card]()
     
     init() {
-        for fill in Card.Option.all {
+        for shading in Card.Option.all {
             for shape in Card.Option.all {
                 for colour in Card.Option.all {
                     for number in Card.Option.all {
-                        cards.append(Card(colour: colour, shape: shape, fill: fill, number: number))
+                        cards.append(Card(colour: colour, shape: shape, shading: shading, number: number))
                     }
                 }
             }

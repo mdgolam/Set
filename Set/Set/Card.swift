@@ -11,7 +11,7 @@ import Foundation
 struct Card: Equatable, CustomStringConvertible {
     
     static func ==(fSide: Card, sSide: Card) -> Bool {
-        return true
+        return fSide.description == sSide.description
     }
     
     enum Option: Int, CustomStringConvertible {
@@ -26,16 +26,16 @@ struct Card: Equatable, CustomStringConvertible {
     
     let colour: Option
     let shape: Option
-    let fill: Option
+    let shading: Option
     let number: Option
     
-    var description: String { return "\(number)-\(colour)-\(shape)-\(fill)" }
+    var description: String { return "\(number)-\(colour)-\(shape)-\(shading)" }
     
     static func isSet(cards: [Card]) -> Bool {
         guard cards.count == 3 else { return false }
         let sum = [
             cards.reduce(0, { $0 + $1.number.rawValue }),
-            cards.reduce(0, { $0 + $1.fill.rawValue }),
+            cards.reduce(0, { $0 + $1.shading.rawValue }),
             cards.reduce(0, { $0 + $1.colour.rawValue }),
             cards.reduce(0, { $0 + $1.shape.rawValue })
         ]
