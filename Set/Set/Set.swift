@@ -58,25 +58,6 @@ struct Set {
         }
     }
     
-    mutating func restart() {
-        scoreCount = 0
-        flipCount = 0
-        setCount = 0
-        
-        hiddenFromDeckCards = []
-        cardsOnTable = []
-        selectedCards = []
-        cardsTriedToMatch = []
-        deck = CardDeck()
-        
-        assert(Constants.numberOfCards > 0, "You must have at least one card")
-        for _ in 1...Constants.numberOfCards {
-            if let card = deck.draw() {
-                cardsOnTable += [card]
-            }
-        }
-    }
-    
     mutating func chooseCard(at index: Int) {
         assert(cardsOnTable.indices.contains(index), "Set.chooseCard(at: \(index)): chosen index not in the cards")
         

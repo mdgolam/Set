@@ -29,14 +29,14 @@ class ViewController: UIViewController {
     }
     
     @IBAction func dealThreeMoreCards(_ sender: UIButton) {
-        if game.cardsOnTable.count < 22 || game.selectedCards.count == 3 {
+        if (game.cardsOnTable.count + 3) <= cardButtons.count {
             game.deal()
             updateButtonsFromModel()
         }
     }
     
     @IBAction func restartGame(_ sender: UIButton) {
-        game.restart()
+        game = Set()
         updateButtonsFromModel()
     }
     
