@@ -62,15 +62,13 @@
 		F570F55C2081016A003BBCAE /* Set */ = {
 			isa = PBXGroup;
 			children = (
+				F5FDA62321E393C500923B53 /* View */,
+				F5FDA62221E3939600923B53 /* Model */,
 				F575090F208D57FB006726BE /* Supporting Files */,
 				F570F55F2081016A003BBCAE /* ViewController.swift */,
 				F5FC6B412090926900D5BA8D /* menuButton.swift */,
-				F5DC33C120922ED600D81172 /* CardDeck.swift */,
-				F57AF027208CB49B005DB54C /* Set.swift */,
-				F57AF029208CB4C0005DB54C /* Card.swift */,
 				F570F5612081016A003BBCAE /* Main.storyboard */,
 				F570F5642081016A003BBCAE /* Assets.xcassets */,
-				F570F5662081016A003BBCAE /* LaunchScreen.storyboard */,
 				F570F5692081016A003BBCAE /* Info.plist */,
 			);
 			path = Set;
@@ -79,9 +77,27 @@
 		F575090F208D57FB006726BE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F570F5662081016A003BBCAE /* LaunchScreen.storyboard */,
 				F570F55D2081016A003BBCAE /* AppDelegate.swift */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F5FDA62221E3939600923B53 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F5DC33C120922ED600D81172 /* CardDeck.swift */,
+				F57AF027208CB49B005DB54C /* Set.swift */,
+				F57AF029208CB4C0005DB54C /* Card.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F5FDA62321E393C500923B53 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
