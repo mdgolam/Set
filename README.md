@@ -1,8 +1,10 @@
 # Set
 
-This project is a Set game implementation for iOS 12
+Set is a real-time card game designed by Marsha Falco in 1974 and published by Set Enterprises in 1991. [Wiki](https://en.wikipedia.org/wiki/Set_(card_game))
 
-It's the second home assignment from the Stanford's [«Developing iOS 11 Apps with Swift»](https://itunes.apple.com/us/course/developing-ios-11-apps-with-swift/id1309275316) course.
+This project is a Set implementation for iOS 12.
+
+It was the second home assignment from the Stanford's [«Developing iOS Apps with Swift»](https://itunes.apple.com/us/course/developing-ios-11-apps-with-swift/id1309275316) course.
 
 # Pics
 
