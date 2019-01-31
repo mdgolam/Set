@@ -44,7 +44,7 @@ import UIKit
         clipsToBounds = true
     }
     
-    //        Constants
+    // Constants
     private struct DefaultValues {
         static let cornerRadius: CGFloat = 6.0
         static let borderWidth: CGFloat = 2.0
