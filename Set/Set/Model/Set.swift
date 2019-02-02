@@ -14,6 +14,7 @@ struct Set {
         static let bonus = 10
         static let notSetPenalty = 5
         static let deselectPenalty = 1
+        static let dealWhenThereIsSet = 2
         static let numberOfCards = 12
     }
     
@@ -62,6 +63,24 @@ struct Set {
     }
     
     
+    var cardSetsThatMakeSet:[[Int]] {
+        var setsThatMakeSet = [[Int]]()
+        if cardsOnTable.count > 2 {
+            for i in 0..<cardsOnTable.count {
+                for j in (i+1)..<cardsOnTable.count {
+                    for k in (j+1)..<cardsOnTable.count {
+                        let cardsToCheck = [cardsOnTable[i], cardsOnTable[j], cardsOnTable[k]]
+                        if Card.isSet(cards: cardsToCheck) {
+                            setsThatMakeSet.append([i, j, k])
+                        }
+                    }
+                }
+            }
+        }
+        return setsThatMakeSet
+    }
+    
+    
     init() {
         assert(Constants.numberOfCards > 0, "You must have at least one card")
         lastTryTime = Date.init()
@@ -101,6 +120,9 @@ struct Set {
     }
 
     mutating func deal() {
+        if !cardSetsThatMakeSet.isEmpty {
+            scoreCount -= Constants.dealWhenThereIsSet
+        }
         if let deal3Cards =  take3FromDeck() {
             cardsOnTable += deal3Cards
         }
