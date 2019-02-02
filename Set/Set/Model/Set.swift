@@ -19,12 +19,23 @@ struct Set {
     
     private(set) var scoreCount = 0
     private(set) var flipCount = 0
-    private(set) var setCount = 0
+    private(set) var setCount = 0     
     
     private(set) var cardsOnTable = [Card]()
     private(set) var selectedCards = [Card]()
-    private(set) var hiddenFromDeckCards = [Card]()
+    private(set) var cardsHiddenFromDeck = [Card]()
     private(set) var cardsTriedToMatch = [Card]()
+    
+    var lastTryTime:Date?
+    var timeBonus:Int {
+        var bonus = 0
+        if let timeSinceLastTry = lastTryTime?.timeIntervalSinceMoment {
+            if timeSinceLastTry <= 60 && timeSinceLastTry > 0 {
+                bonus = Int(60/timeSinceLastTry)
+            }
+        }
+        return bonus
+    }
     
     private lazy var deck = CardDeck()
     
@@ -36,7 +47,8 @@ struct Set {
         set {
             if newValue != nil {
                 if newValue! {
-                    scoreCount += Constants.bonus
+                    scoreCount += Constants.bonus + timeBonus // считаем таймбонус относительно последнего сета
+                    lastTryTime = Date.init() // записываем время этого сета
                     setCount += 1
                 } else {
                     scoreCount -= Constants.notSetPenalty
@@ -49,32 +61,36 @@ struct Set {
         }
     }
     
+    
     init() {
         assert(Constants.numberOfCards > 0, "You must have at least one card")
+        lastTryTime = Date.init()
         for _ in 1...Constants.numberOfCards {
             if let card = deck.draw() {
                 cardsOnTable += [card]
             }
         }
+        
     }
     
     mutating func chooseCard(at index: Int) {
         assert(cardsOnTable.indices.contains(index), "Set.chooseCard(at: \(index)): chosen index not in the cards")
         
         let chosenCard = cardsOnTable[index]
-        // find the touched card by its index
+        // find the touched card by index
 
         if isSet != nil {
-            if isSet! { replaceOrRemoveThreeCards() } else { (print("else")) }
+            if isSet! { replaceOrRemoveThreeCards() }
             isSet = nil
         }
         
-        if !hiddenFromDeckCards.contains(chosenCard) && !cardsTriedToMatch.contains(chosenCard) {
+        if !cardsHiddenFromDeck.contains(chosenCard) && !cardsTriedToMatch.contains(chosenCard) {
             if selectedCards.count == 2, !selectedCards.contains(chosenCard) {
                 selectedCards += [chosenCard]
+                // попытка собрать сет
                 isSet = Card.isSet(cards: selectedCards)
             } else {
-                assert(!hiddenFromDeckCards.contains(chosenCard))
+                assert(!cardsHiddenFromDeck.contains(chosenCard))
                 selectedCards.toggle(element: chosenCard)
                 if selectedCards.count == 0 {
                     scoreCount -= Constants.deselectPenalty
@@ -96,7 +112,7 @@ struct Set {
         } else {
             cardsOnTable.remove(elements: cardsTriedToMatch)
         }
-        hiddenFromDeckCards += cardsTriedToMatch
+        cardsHiddenFromDeck += cardsTriedToMatch
         cardsTriedToMatch.removeAll()
     }
     
@@ -132,7 +148,7 @@ extension Array where Element : Equatable {
     // заменить элементы внутри одного массива. элементы мэтчатся с первым массивом в аргументах и меняются на новые.
     // в двух массивах должно быть одинаковое количество элементов
     mutating func replace(elements: [Element], with new: [Element]) {
-        guard elements.count == new.count else {print("BIACH!\(elements+new)"); return}
+        guard elements.count == new.count else { return }
         for index in 0..<new.count {
             if let matchedIndex = self.index(of: elements[index]) {
                 self[matchedIndex] = new[index]
@@ -140,4 +156,10 @@ extension Array where Element : Equatable {
         }
     }
 
+}
+
+extension Date {
+    var timeIntervalSinceMoment: Int {
+        return Int(-self.timeIntervalSinceNow)
+    }
 }

@@ -46,12 +46,17 @@ class ViewController: UIViewController {
     private func updateButtonsFromModel() {
         scoreLabel.text = "score: \(game.scoreCount)"
         setsLabel.text = "sets: \(game.setCount)"
-        
+
         let itIsSet = game.isSet
         
-        
-        if itIsSet != nil && itIsSet! {
-            setIndicator.text = "Set!"
+        if itIsSet != nil {
+            if itIsSet! {
+                setIndicator.textColor = #colorLiteral(red: 0.1960784314, green: 0.8431372549, blue: 0.2941176471, alpha: 1)
+                setIndicator.text = "Set!"
+            } else {
+                setIndicator.textColor = #colorLiteral(red: 1, green: 0.2705882353, blue: 0.2274509804, alpha: 1)
+                setIndicator.text = "Not Set"
+            }
         } else {
             setIndicator.text = ""
         }
@@ -78,6 +83,7 @@ class ViewController: UIViewController {
                     attributes[.foregroundColor] = colour
                 case .third:
                     attributes[.strokeWidth] = -1
+                    attributes[.strokeWidth] = 2
                     attributes[.foregroundColor] = colour.withAlphaComponent(0.35)
                 }
                 
@@ -88,22 +94,38 @@ class ViewController: UIViewController {
                 // не Set → карты остаются выделенными (внешне)
                 if game.cardsTriedToMatch.contains(card) || game.selectedCards.contains(card) {
                     button.layer.borderWidth = 3.0
-                    if itIsSet != nil && itIsSet! {
-                        button.layer.borderColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+                    // TODO: вообще по-хорошему не надо каждый раз спрашивать, был ли сет для всех 24 кнопок. как бы это оптимизировать?
+                    if itIsSet != nil {
+                        if itIsSet! {
+                            button.layer.borderColor = #colorLiteral(red: 0.1960784314, green: 0.8431372549, blue: 0.2941176471, alpha: 1)
+                        } else {
+                            button.layer.borderColor = #colorLiteral(red: 1, green: 0.2705882353, blue: 0.2274509804, alpha: 1)
+                        }
                     } else {
-                        button.layer.borderColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+                        button.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
                     }
                 } else {
-                     button.layer.borderWidth = 0
+                    button.layer.borderWidth = 0
                 }
+                
+                    // не Set → карты остаются выделенными (внешне)
+//                    if itIsSet != nil && itIsSet! {
+//                        button.layer.borderColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+//                    } else {
+//                        button.layer.borderColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+//                    }
+//                } else {
+//                     button.layer.borderWidth = 0
+//                }
 
-                // не Set → внешне выделение снимается
+                // не Set → выделение снимается, но составленным Сетом можно полюбоваться
 //                if itIsSet != nil && itIsSet! && game.cardsTriedToMatch.contains(card) {
+////                if (itIsSet == nil || itIsSet == false) && game.cardsTriedToMatch.contains(card) {
 //                    button.layer.borderWidth = 3.0
-//                    button.layer.borderColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+//                    button.layer.borderColor = #colorLiteral(red: 0.1960784314, green: 0.8431372549, blue: 0.2941176471, alpha: 1)
 //                } else if game.selectedCards.contains(card) {
 //                    button.layer.borderWidth = 3.0
-//                    button.layer.borderColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+//                    button.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
 //                } else {
 //                    button.layer.borderWidth = 0
 //                }
