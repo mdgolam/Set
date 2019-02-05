@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    private lazy var game = Set()
+    private lazy var game = Game()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var setsLabel: UILabel!
     @IBOutlet weak var setIndicator: UILabel!
+    @IBOutlet weak var hintButton: menuButton!
     
     @IBAction func touchCard(_ sender: UIButton) {
         timer?.invalidate()
@@ -42,47 +43,60 @@ class ViewController: UIViewController {
         static let timeToShowSets:TimeInterval = 3 // in seconds
     }
     
-    func showCurrentHint(cardsToShow: [Int]) {
+    func showCurrentHint(for lastHintIndex: Int) {
+        if timer != nil && (timer?.isValid)! {
+            updateButtonsFromModel()
+        }
+        let cardsToShow = game.cardSetsThatMakeSet[lastHintIndex]
+        let avaliableSetsCount = game.cardSetsThatMakeSet.count
+        setsLabel.text = "\(lastHintIndex+1)/\(avaliableSetsCount) sets"
         cardsToShow.forEach({ (index) in
             let cardButton = self.cardButtons[index]
-            cardButton.layer.borderColor = #colorLiteral(red: 0.1960784314, green: 0.8431372549, blue: 0.2941176471, alpha: 1)
+            cardButton.layer.borderColor = #colorLiteral(red: 0.1568627451, green: 0.8039215686, blue: 0.2549019608, alpha: 1)
             cardButton.layer.borderWidth = 3.0
         })
     }
     
     @IBAction func showHints(_ sender: UIButton) {
-        timer?.invalidate()
+        if timer != nil && (timer?.isValid)! {
+            timer?.invalidate()
+            updateButtonsFromModel()
+            return
+        }
         
         if !game.cardSetsThatMakeSet.isEmpty {
-            let avaliableSetsCount = game.cardSetsThatMakeSet.count
             
-            setsLabel.textColor = #colorLiteral(red: 0.1960784314, green: 0.8431372549, blue: 0.2941176471, alpha: 1)
+            hintButton.setTitle("stop", for: .normal)
+            hintButton.layer.backgroundColor = #colorLiteral(red: 0.1215686275, green: 0.1294117647, blue: 0.1411764706, alpha: 1)
+            hintButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: .normal)
+            setsLabel.textColor = #colorLiteral(red: 0.1568627451, green: 0.8039215686, blue: 0.2549019608, alpha: 1)
             var lastHintIndex = 0
-            showCurrentHint(cardsToShow: self.game.cardSetsThatMakeSet[lastHintIndex])
-            setsLabel.text = "\(1)/\(avaliableSetsCount) sets"
+            showCurrentHint(for: 0)
             
-            timer = Timer.scheduledTimer(withTimeInterval: Constants.timeToShowSets, repeats: true, block: { (Timer) in
-                Timer.tolerance = 0.5
-                self.updateButtonsFromModel()
+            timer = Timer.scheduledTimer(withTimeInterval: Constants.timeToShowSets, repeats: true, block: { (timer) in
+                timer.tolerance = 0.5
                 lastHintIndex += 1
                 
-                if lastHintIndex < avaliableSetsCount {
-                    self.setsLabel.text = "\(lastHintIndex+1)/\(avaliableSetsCount) sets"
-                    let cardsToShow = self.game.cardSetsThatMakeSet[lastHintIndex]
-                    self.showCurrentHint(cardsToShow: cardsToShow)
+                if lastHintIndex < self.game.cardSetsThatMakeSet.count {
+                    self.showCurrentHint(for: lastHintIndex)
                 } else {
-                    Timer.invalidate()
-                    self.updateButtonsFromModel() // it actually fires, wow!
+                    timer.invalidate()
+                    self.updateButtonsFromModel()
                 }
             })
         } else {
+            self.setsLabel.textColor = #colorLiteral(red: 1, green: 0.2705882353, blue: 0.2274509804, alpha: 1)
             setsLabel.text = "no sets"
+            timer = Timer.scheduledTimer(withTimeInterval: Constants.timeToShowSets, repeats: false, block: { (timer) in
+                timer.invalidate()
+                self.updateButtonsFromModel()
+            })
         }
     }
     
     @IBAction func restartGame(_ sender: UIButton) {
         timer?.invalidate()
-        game = Set()
+        game = Game()
         updateButtonsFromModel()
     }
     
@@ -95,16 +109,21 @@ class ViewController: UIViewController {
         if timer != nil && !(timer?.isValid)! {
             setsLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             setsLabel.text = "sets: \(game.setCount)"
+//            print("should fire when timer is off")
+            
+            hintButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            hintButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235), for: .normal)
+            hintButton.setTitle("hint", for: .normal)
         }
 
         let itIsSet = game.isSet
         
         if itIsSet != nil {
             if itIsSet! {
-                setIndicator.textColor = #colorLiteral(red: 0.1960784314, green: 0.8431372549, blue: 0.2941176471, alpha: 1)
+                setIndicator.textColor = #colorLiteral(red: 0.1568627451, green: 0.8039215686, blue: 0.2549019608, alpha: 1)
                 setIndicator.text = "Set!"
             } else {
-                setIndicator.textColor = #colorLiteral(red: 1, green: 0.2705882353, blue: 0.2274509804, alpha: 1)
+                setIndicator.textColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
                 setIndicator.text = "Not Set"
             }
         } else {
@@ -145,12 +164,12 @@ class ViewController: UIViewController {
                     button.layer.borderWidth = 3.0
                     if itIsSet != nil {
                         if itIsSet! {
-                            button.layer.borderColor = #colorLiteral(red: 0.1960784314, green: 0.8431372549, blue: 0.2941176471, alpha: 1)
+                            button.layer.borderColor = #colorLiteral(red: 0.1568627451, green: 0.8039215686, blue: 0.2549019608, alpha: 1)
                         } else {
-                            button.layer.borderColor = #colorLiteral(red: 1, green: 0.2705882353, blue: 0.2274509804, alpha: 1)
+                            button.layer.borderColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
                         }
                     } else {
-                        button.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+                        button.layer.borderColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
                     }
                 } else {
                     button.layer.borderWidth = 0

@@ -1,5 +1,5 @@
 //
-//  Set.swift
+//  Game.swift
 //  Set
 //
 //  Created by Vlad Md Golam on 22.04.2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Set {
+struct Game {
     
     private struct Constants {
         static let bonus = 10
@@ -77,6 +77,12 @@ struct Set {
                 }
             }
         }
+        if let gameIsSet = isSet, gameIsSet {
+            let matchIndices = cardsOnTable.indices(of: cardsTriedToMatch)
+            return setsThatMakeSet.map{ Set($0)}
+                .filter{$0.intersection(Set(matchIndices)).isEmpty}
+                .map{Array($0)}
+        }
         return setsThatMakeSet
     }
     
@@ -93,7 +99,7 @@ struct Set {
     }
     
     mutating func chooseCard(at index: Int) {
-        assert(cardsOnTable.indices.contains(index), "Set.chooseCard(at: \(index)): chosen index not in the cards")
+        assert(cardsOnTable.indices.contains(index), "Game.chooseCard(at: \(index)): chosen index not in the cards")
         
         let chosenCard = cardsOnTable[index]
         // find the touched card by index
@@ -176,6 +182,12 @@ extension Array where Element : Equatable {
                 self[matchedIndex] = new[index]
             }
         }
+    }
+    
+    func indices(of elements: [Element]) ->[Int]{
+        guard self.count >= elements.count, elements.count > 0 else {return []}
+        /// Ищем индексы элементов elements у себя - self
+        return elements.map{self.index(of: $0)}.compactMap{$0}
     }
 
 }
