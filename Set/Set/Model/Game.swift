@@ -19,7 +19,6 @@ struct Game {
     }
     
     private(set) var scoreCount = 0
-    private(set) var flipCount = 0
     private(set) var setCount = 0     
     
     private(set) var cardsOnTable = [Card]()
@@ -121,7 +120,6 @@ struct Game {
                     scoreCount -= Constants.deselectPenalty
                 }
             }
-            flipCount += 1
         }
     }
 

@@ -60,6 +60,9 @@ class ViewController: UIViewController {
     @IBAction func showHints(_ sender: UIButton) {
         if timer != nil && (timer?.isValid)! {
             timer?.invalidate()
+            hintButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            hintButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235), for: .normal)
+            hintButton.setTitle("hint", for: .normal)
             updateButtonsFromModel()
             return
         }
@@ -109,11 +112,10 @@ class ViewController: UIViewController {
         if timer != nil && !(timer?.isValid)! {
             setsLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             setsLabel.text = "sets: \(game.setCount)"
-//            print("should fire when timer is off")
             
-            hintButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            hintButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235), for: .normal)
-            hintButton.setTitle("hint", for: .normal)
+//            hintButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+//            hintButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235), for: .normal)
+//            hintButton.setTitle("hint", for: .normal)
         }
 
         let itIsSet = game.isSet
@@ -175,7 +177,7 @@ class ViewController: UIViewController {
                     button.layer.borderWidth = 0
                 }
 
-                // не Set → выделение снимается, но составленным Сетом можно полюбоваться
+                // не Set → выделение снимается, а составленным Сетом можно полюбоваться
 //                if itIsSet != nil && itIsSet! && game.cardsTriedToMatch.contains(card) {
 ////                if (itIsSet == nil || itIsSet == false) && game.cardsTriedToMatch.contains(card) {
 //                    button.layer.borderWidth = 3.0
