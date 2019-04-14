@@ -63,6 +63,7 @@ class ViewController: UIViewController {
             hintButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             hintButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235), for: .normal)
             hintButton.setTitle("hint", for: .normal)
+            hintButton.layer.borderWidth = 0
             updateButtonsFromModel()
             return
         }
@@ -70,8 +71,10 @@ class ViewController: UIViewController {
         if !game.cardSetsThatMakeSet.isEmpty {
             
             hintButton.setTitle("stop", for: .normal)
-            hintButton.layer.backgroundColor = #colorLiteral(red: 0.1215686275, green: 0.1294117647, blue: 0.1411764706, alpha: 1)
             hintButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: .normal)
+            hintButton.layer.backgroundColor = #colorLiteral(red: 0.1215686275, green: 0.1294117647, blue: 0.1411764706, alpha: 1)
+            hintButton.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            hintButton.layer.borderWidth = 3.0
             setsLabel.textColor = #colorLiteral(red: 0.1568627451, green: 0.8039215686, blue: 0.2549019608, alpha: 1)
             var lastHintIndex = 0
             showCurrentHint(for: 0)
@@ -113,9 +116,9 @@ class ViewController: UIViewController {
             setsLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             setsLabel.text = "sets: \(game.setCount)"
             
-//            hintButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-//            hintButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235), for: .normal)
-//            hintButton.setTitle("hint", for: .normal)
+            hintButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            hintButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8470588235), for: .normal)
+            hintButton.setTitle("hint", for: .normal)
         }
 
         let itIsSet = game.isSet
@@ -161,7 +164,7 @@ class ViewController: UIViewController {
                 let attributedTitle = NSMutableAttributedString(string: title, attributes: attributes)
                 button.setAttributedTitle(attributedTitle, for: .normal)
                 
-                // не Set → карты остаются выделенными (внешне)
+                // не Set → карты остаются выделенными (только внешне)
                 if game.cardsTriedToMatch.contains(card) || game.selectedCards.contains(card) {
                     button.layer.borderWidth = 3.0
                     if itIsSet != nil {
@@ -169,6 +172,10 @@ class ViewController: UIViewController {
                             button.layer.borderColor = #colorLiteral(red: 0.1568627451, green: 0.8039215686, blue: 0.2549019608, alpha: 1)
                         } else {
                             button.layer.borderColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
+                            timer = Timer.scheduledTimer(withTimeInterval: Constants.timeToShowSets, repeats: false, block: { (timer) in
+                                button.layer.borderWidth = 0
+                                self.setIndicator.text = ""
+                            })
                         }
                     } else {
                         button.layer.borderColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
@@ -177,7 +184,7 @@ class ViewController: UIViewController {
                     button.layer.borderWidth = 0
                 }
 
-                // не Set → выделение снимается, а составленным Сетом можно полюбоваться
+//                 не Set → выделение снимается, а составленным Сетом можно полюбоваться
 //                if itIsSet != nil && itIsSet! && game.cardsTriedToMatch.contains(card) {
 ////                if (itIsSet == nil || itIsSet == false) && game.cardsTriedToMatch.contains(card) {
 //                    button.layer.borderWidth = 3.0

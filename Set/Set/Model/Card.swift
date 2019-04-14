@@ -41,5 +41,4 @@ struct Card: Equatable, CustomStringConvertible {
         ]
         return (sum.reduce(true, { $0 && ($1 % 3  == 0) } ))
     }
-    
 }

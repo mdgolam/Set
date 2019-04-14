@@ -16,6 +16,12 @@ import UIKit
         }
     }
     
+//    @IBInspectable var borderWidth: CGFloat = DefaultValues.borderWidth {
+//        didSet {
+//            layer.borderWidth = borderWidth
+//        }
+//    }
+    
 //    @IBInspectable var title: String {
 //        didSet {
 //             setTitle(title, for: .normal)
@@ -34,12 +40,14 @@ import UIKit
     
     private func configure () {
         layer.cornerRadius = cornerRadius
+//        layer.borderWidth = borderWidth
         clipsToBounds = true
     }
     
     // Constants
     private struct DefaultValues {
         static let cornerRadius: CGFloat = 6.0
+//        static let borderWidth: CGFloat = 3.0
     }
     
 }
